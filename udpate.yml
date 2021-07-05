@@ -1,0 +1,17 @@
+---
+  - hosts: all
+  - name: 1. Install httpd service
+    package: name=httpd state=present
+   
+  - name: start httpd service and enable the same
+    service: name=httpd state=started enabled=yes
+    
+  - name: copy example html file to /var/www/html directory
+    copy: src=/tmp/index.html dest=/var/www/html/index.html mode=0775
+    
+  - name: Add apache to iptables
+    command: firewall-cmd --zone=public --permanent --add-service=http
+    command: firewall-cmd --zone=public --permanent --add-service=https
+    
+  - name: Firewalld restart
+    command: firewall-cmd --reload
